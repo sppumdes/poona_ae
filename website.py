@@ -3,7 +3,7 @@ import pandas as pd
 from PIL import Image
 import pydeck as pdk  # For enhanced maps
 
-# **Set Page Configuration**
+
 st.set_page_config(
     page_title="Pune's Architectural Evolution",
     page_icon=":city_sunrise:",
@@ -11,27 +11,73 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# **Custom CSS for styling (make images responsive)**
 st.markdown(
     """
-<style>
-    img {
-        max-width: 100%;
-        height: auto;
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+    body {
+        font-family: 'Montserrat', sans-serif;
+        background: linear-gradient(to right, #f7f7f7, #e3e3e3);
     }
     .centered-text {
         text-align: center;
+        margin-bottom: 20px;
     }
     .sidebar .sidebar-content {
         background: #F5F5F5;
     }
-</style>
-""",
+    .gallery-image:hover {
+        transform: scale(1.05);
+        transition: transform 0.3s ease;
+    }
+    .highlight-box {
+        background-color: #fcfcfc;
+        border-left: 4px solid #FFA500;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 4px;
+    }
+    .highlight-box h4 {
+        margin-top: 0;
+        font-weight: 700;
+    }
+    .highlight-box ul {
+        margin-bottom: 0;
+        padding-left: 20px;
+    }
+    .highlight-box ul li {
+        margin-bottom: 5px;
+    }
+    .main-title {
+        text-align: center;
+        font-size: 3em;
+        font-weight: 700;
+        margin-top: 20px;
+        color: #333333;
+    }
+    .decade-title {
+        font-size: 2em;
+        color: #333333;
+        margin-top: 20px;
+    }
+    .footer-text {
+        font-size: 0.9em;
+        color: #666666;
+        text-align: center;
+        margin-top: 30px;
+    }
+    .footer-text a {
+        color: #666666;
+        text-decoration: none;
+    }
+    </style>
+    """,
     unsafe_allow_html=True,
 )
 
 # **Set Mapbox API Key**
-pdk.settings.mapbox_api_key = "YOUR_MAPBOX_API_KEY"  # Replace with your token
+pdk.settings.mapbox_api_key = "YOUR_MAPBOX_API_KEY"
 
 # **Load Data**
 @st.cache_data
@@ -75,12 +121,43 @@ decade_overviews = {
     """,
 }
 
+# **Define Decade Highlights**
+decade_highlights = {
+    "1940s": [
+        "Transitioning from colonial influences to vernacular adaptations",
+        "Introduction of reinforced concrete and newer building materials",
+        "Foundational public and educational institutions"
+    ],
+    "1950s": [
+        "Rising modernist principles influencing cityscapes",
+        "Blending traditional aesthetics with new construction techniques",
+        "Emergence of key municipal and residential projects"
+    ],
+    "1960s": [
+        "Strong focus on functionality and open spaces",
+        "Expansion of government complexes and research institutes",
+        "Initial steps towards zoning and planned urban growth"
+    ],
+    "1970s": [
+        "Growing emphasis on sustainable and climate-responsive designs",
+        "Increased use of local materials and eco-friendly practices",
+        "Housing cooperatives and community-centric developments"
+    ],
+    "1980s-1990s": [
+        "Eclectic fusion of international and indigenous design philosophies",
+        "Introduction of IT parks and corporate architecture",
+        "Postmodern elements and innovative building façades"
+    ],
+}
+
 # **Decades List**
 decades = ["Home", "1940s", "1950s", "1960s", "1970s", "1980s-1990s", "About"]
 
 # **Sidebar Navigation**
+st.sidebar.title("Explore Pune's Past")
+st.sidebar.markdown("Navigate through six decades of architectural transformation:")
 decade_selection = st.sidebar.selectbox(
-    "Navigate through Decades", 
+    "Select a Decade or Section", 
     decades, 
     index=decades.index(st.session_state.selected_decade)
 )
@@ -91,57 +168,64 @@ if decade_selection != st.session_state.selected_decade:
 
 # **Home Page**
 if st.session_state.selected_decade == "Home":
-    st.title("Pune's Architectural Evolution (1940s - 1990s)")
+    st.markdown("<h1 class='main-title'>Pune's Architectural Evolution (1940s - 1990s)</h1>", unsafe_allow_html=True)
 
-    # Display the logo in a smaller, centered format with container width
     st.markdown("<div class='centered-text'>", unsafe_allow_html=True)
     st.image("assets/logo.png", caption="Pune Architectural Archive", use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown(
         """
-    Welcome to the Pune Architectural Archive, an interactive journey through the city's evolving built environment from the 1940s to the 1990s.
-    
-    Over these decades, Pune transformed from a modest educational hub into a burgeoning metropolis. 
-    Each era brought its own architectural language, blending traditional craftsmanship with modern technology, and reflecting broader socio-economic changes.
-    
-    **Features of this Archive:**
-    - **Decade-by-Decade Exploration:** Traverse through time to see how architectural styles and city planning evolved.
-    - **Image Galleries & Featured Projects:** Delve into illustrated examples of landmark buildings, including schools, public offices, residences, and commercial spaces.
-    - **Interactive Map:** Discover the geographic distribution of significant architectural works using a 3D map visualization.
-    """
+        Welcome to the **Pune Architectural Archive**, an interactive journey through the city's evolving built environment from the 1940s to the 1990s.
+        
+        Over these decades, Pune transformed from a modest educational hub into a burgeoning metropolis. Each era introduced fresh design philosophies, construction materials, and planning principles, mirroring broader social, economic, and cultural shifts.
+        """
     )
+    
+    st.markdown(
+        """
+        **Features of this Archive:**
+        - **Decade-by-Decade Exploration:** Traverse through time and witness changing architectural styles and urban planning milestones.
+        - **Immersive Visual Galleries:** Explore landmark buildings, from public institutions and educational campuses to residential complexes and commercial hubs.
+        - **Interactive 3D Map:** Pinpoint the geographic distribution of Pune's architectural gems using an advanced map visualization tool.
+        """
+    )
+
+    st.info("Use the sidebar to start exploring different decades or learn more in the 'About' section.")
 
 # **About Page**
 elif st.session_state.selected_decade == "About":
     st.title("About This Project")
     st.markdown(
         """
-    This project aims to document and showcase Pune's architectural heritage from the mid-20th century. 
-    By collating images, descriptions, and historical context, it provides a rich, educational resource for researchers, students, and enthusiasts.
+        This digital archive is a tribute to Pune's rich architectural heritage and its dynamic transformation over the mid-20th century. By compiling images, archival research, and expert insights, we hope to provide a valuable educational resource and a source of inspiration.
+        """
+    )
     
-    **Project Goals:**
-    - Create a digital archive of Pune's historical and modern buildings.
-    - Highlight architectural trends and socio-cultural influences across decades.
-    - Provide an interactive platform that invites exploration and deeper understanding.
-    
-    **Methodology & Sources:**
-    - Extensive archival research of municipal records, architectural journals, and historical photographs.
-    - Contributions from local historians, architects, and urban planners.
-    - Use of geospatial data for plotting buildings and neighborhoods on a 3D interactive map.
-    
-    **Contributors:**
-    - Kaustubh Devang - Research, Content Development, and Web Implementation
-    
-    **Contact & Feedback:**
-    If you have suggestions, historical photographs, or corrections, please get in touch at: 
-    [pune_architecture@example.com](mailto:kaustubhdevang16@gmail.com)
-    """
+    st.markdown(
+        """
+        **Project Goals:**
+        - Construct a comprehensive digital repository of Pune's historical buildings.
+        - Highlight the interplay between architectural trends, socio-cultural influences, and evolving urban policies.
+        - Offer an interactive, user-friendly platform that encourages exploration and deeper appreciation.
+        
+        **Methodology & Sources:**
+        - In-depth review of municipal archives, architectural journals, and historical documentation.
+        - Contributions from local historians, architects, and urban planners.
+        - Integration of geospatial data for mapping and visualization.
+        
+        **Key Contributor:**
+        - Kaustubh Devang – Research, Content Development, Web Implementation
+        
+        **Contact & Feedback:**
+        We welcome contributions, suggestions, and corrections. Please reach out at:
+        [kaustubhdevang16@gmail.com](mailto:kaustubhdevang16@gmail.com)
+        """
     )
 
 # **Decade Pages**
 else:
-    st.title(f"Pune in the {st.session_state.selected_decade}")
+    st.markdown(f"<h1 class='decade-title'>Pune in the {st.session_state.selected_decade}</h1>", unsafe_allow_html=True)
     decade_data = data[data["decade"] == st.session_state.selected_decade]
 
     # **Use Tabs for Organization**
@@ -155,23 +239,44 @@ else:
             st.session_state.selected_decade, "Overview information not available."
         )
         st.markdown(overview_text)
+        
+        highlights = decade_highlights.get(st.session_state.selected_decade, [])
+        if highlights:
+            st.markdown(
+                f"""
+                <div class="highlight-box">
+                    <h4>Key Highlights of this Era:</h4>
+                    <ul>
+                        {''.join(f'<li>{item}</li>' for item in highlights)}
+                    </ul>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
     with tab_gallery:
         st.header("Visual Gallery")
-        st.write("Explore a curated selection of buildings and landmarks from this era.")
-        # Display images in a responsive grid
+        st.write("Explore a selection of buildings and landmarks that exemplify this decade's architectural style. Hover over images for a subtle effect!")
+        
         cols = st.columns(3)
+        idx_col = 0
         for idx, row in decade_data.iterrows():
             try:
                 image = Image.open(row["image_path"])
-                cols[idx % 3].image(image, caption=row["title"], use_container_width=True)
+                with cols[idx_col]:
+                    st.markdown(f"<div class='gallery-image'>", unsafe_allow_html=True)
+                    st.image(image, caption=row["title"], use_container_width=True)
+                    st.markdown("</div>", unsafe_allow_html=True)
+                
+                idx_col = (idx_col + 1) % 3
             except FileNotFoundError:
-                cols[idx % 3].warning(f"Image not found for {row['title']}")
+                cols[idx_col].warning(f"Image not found for {row['title']}")
+                idx_col = (idx_col + 1) % 3
 
     with tab_projects:
         st.header("Featured Projects")
         st.write(
-            "Dive deeper into some of the most notable buildings and their backstories."
+            "Delve deeper into notable buildings of this decade. Click on a project to learn about its background, architectural significance, and the visionary minds behind it."
         )
         for idx, row in decade_data.iterrows():
             with st.expander(row["title"]):
@@ -189,6 +294,7 @@ else:
                         st.markdown(f"**Year Built**: {int(row['year_built'])}")
                     if "style" in row and not pd.isnull(row["style"]):
                         st.markdown(f"**Architectural Style**: {row['style']}")
+                    
                     st.markdown(
                         row["description"]
                         if not pd.isnull(row["description"])
@@ -197,12 +303,11 @@ else:
 
     with tab_map:
         st.header("Interactive 3D Map")
-        st.write("Locate the architectural projects across Pune's landscape.")
+        st.write("Pinpoint the geographical spread of these architectural projects. Zoom, pan, and tilt the map for a detailed spatial understanding.")
         if (
             "location" in decade_data.columns
             and not decade_data["location"].isnull().all()
         ):
-            # **Extract latitude and longitude**
             def extract_lat_lon(location_str):
                 try:
                     if pd.isnull(location_str):
@@ -223,7 +328,6 @@ else:
             map_data["height"] = 50  # Example height
 
             if not map_data.empty:
-                # **Create the pydeck 3D Column Layer**
                 column_layer = pdk.Layer(
                     "ColumnLayer",
                     data=map_data,
@@ -236,7 +340,6 @@ else:
                     auto_highlight=True,
                 )
 
-                # **Add a Text Layer for Labels**
                 text_layer = pdk.Layer(
                     "TextLayer",
                     data=map_data,
@@ -247,25 +350,22 @@ else:
                     get_alignment_baseline="'bottom'",
                 )
 
-                # **Define the initial view state**
                 midpoint = (map_data["lat"].mean(), map_data["lon"].mean())
                 view_state = pdk.ViewState(
                     latitude=midpoint[0],
                     longitude=midpoint[1],
                     zoom=13,
-                    pitch=45,  # Tilt the map for a 3D perspective
+                    pitch=45,
                     bearing=0,
                 )
 
-                # **Create the Deck object**
                 deck = pdk.Deck(
                     map_style="mapbox://styles/mapbox/light-v9",
                     initial_view_state=view_state,
                     layers=[column_layer, text_layer],
-                    tooltip={"text": "{title}\nArchitect: {architect}"},
+                    tooltip={"text": "{title}\nArchitect: {architect}"}
                 )
 
-                # **Render the Deck object in Streamlit**
                 st.pydeck_chart(deck)
             else:
                 st.info("No valid location data available to display on the map.")
@@ -283,21 +383,35 @@ if idx > 1:
     if col1.button(f"← {previous_decade}"):
         st.session_state.selected_decade = previous_decade
 
+# Home Button
+if col2.button("Home"):
+    st.session_state.selected_decade = "Home"
+
 # Next Decade Navigation
 if idx < len(decades) - 2:
     next_decade = decades[idx + 1]
     if col3.button(f"{next_decade} →"):
         st.session_state.selected_decade = next_decade
 
-# Home Button
-if col2.button("Home"):
-    st.session_state.selected_decade = "Home"
-
 # **Footer**
 st.sidebar.markdown("---")
 st.sidebar.markdown(
     """
-© 2024 Pune Architectural Archive  
-*Preserving the Past, Inspiring the Future*
-"""
+    © 2024 Pune Architectural Archive  
+    *Preserving the Past, Inspiring the Future*
+    """
+)
+
+st.markdown(
+    """
+    <div class="footer-text">
+        <p>Connect with us:</p>
+        <p>
+            <a href="mailto:kaustubhdevang16@gmail.com">Email</a> | 
+            <a href="https://www.linkedin.com/">LinkedIn</a> | 
+            <a href="https://www.twitter.com/">Twitter</a>
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
 )
