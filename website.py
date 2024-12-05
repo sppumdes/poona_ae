@@ -11,14 +11,13 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# **Custom CSS for styling**
+# **Custom CSS for styling (make images responsive)**
 st.markdown(
     """
 <style>
-    .centered-image {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
+    img {
+        max-width: 100%;
+        height: auto;
     }
     .centered-text {
         text-align: center;
@@ -94,9 +93,9 @@ if decade_selection != st.session_state.selected_decade:
 if st.session_state.selected_decade == "Home":
     st.title("Pune's Architectural Evolution (1940s - 1990s)")
 
-    # Display the logo in a smaller, centered format
+    # Display the logo in a smaller, centered format with container width
     st.markdown("<div class='centered-text'>", unsafe_allow_html=True)
-    st.image("assets/logo.png", width=250, caption="Pune Architectural Archive")
+    st.image("assets/logo.png", caption="Pune Architectural Archive", use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown(
@@ -159,15 +158,12 @@ else:
 
     with tab_gallery:
         st.header("Visual Gallery")
-        st.write(
-            "Explore a curated selection of buildings and landmarks from this era."
-        )
+        st.write("Explore a curated selection of buildings and landmarks from this era.")
         # Display images in a responsive grid
         cols = st.columns(3)
         for idx, row in decade_data.iterrows():
             try:
                 image = Image.open(row["image_path"])
-                # Use smaller images to ensure they don't take up the whole page
                 cols[idx % 3].image(image, caption=row["title"], use_container_width=True)
             except FileNotFoundError:
                 cols[idx % 3].warning(f"Image not found for {row['title']}")
@@ -182,7 +178,7 @@ else:
                 col1, col2 = st.columns([1, 2])
                 with col1:
                     try:
-                        st.image(row["image_path"], width=200)
+                        st.image(row["image_path"], use_container_width=True)
                     except FileNotFoundError:
                         st.error("Image not available.")
                 with col2:
