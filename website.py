@@ -1,8 +1,7 @@
 import streamlit as st
 import pandas as pd
 from PIL import Image
-import pydeck as pdk  # For enhanced maps
-
+import pydeck as pdk
 
 st.set_page_config(
     page_title="Pune's Architectural Evolution",
@@ -76,23 +75,22 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# **Set Mapbox API Key**
+# Set Mapbox API key
 pdk.settings.mapbox_api_key = "YOUR_MAPBOX_API_KEY"
 
-# **Load Data**
 @st.cache_data
 def load_data():
     data = pd.read_csv("data/architecture_data.csv", encoding="cp1252")
     return data
 
-
-# Initialize session state for decade selection
+# Initialize session state
 if "selected_decade" not in st.session_state:
     st.session_state.selected_decade = "Home"
+if "tab_index" not in st.session_state:
+    st.session_state.tab_index = 0  # For controlling the current section
 
 data = load_data()
 
-# **Define Decade Overviews**
 decade_overviews = {
     "1940s": """
     The 1940s marked the beginning of Pune's modern architectural journey. 
@@ -122,7 +120,6 @@ decade_overviews = {
     """,
 }
 
-# **Define Decade Highlights**
 decade_highlights = {
     "1940s": [
         "Transitioning from colonial influences to vernacular adaptations",
@@ -151,107 +148,91 @@ decade_highlights = {
     ],
 }
 
-# **Decades List**
 decades = ["Home", "1940s", "1950s", "1960s", "1970s", "1980s-1990s", "About"]
+sections = ["Overview", "Gallery", "Featured Projects", "Map"]
 
-# **Sidebar Navigation**
+# Sidebar
 st.sidebar.title("Explore Pune's Past")
 st.sidebar.markdown("Navigate through six decades of architectural transformation:")
 decade_selection = st.sidebar.selectbox(
     "Select a Decade or Section",
     decades,
-    index=decades.index(st.session_state.selected_decade),
+    index=decades.index(st.session_state.selected_decade)
 )
 
-# Update session state when selection changes
 if decade_selection != st.session_state.selected_decade:
     st.session_state.selected_decade = decade_selection
+    st.session_state.tab_index = 0
 
-# **Home Page**
+# Home Page
 if st.session_state.selected_decade == "Home":
     st.markdown(
         "<h1 class='main-title'>Pune's Architectural Evolution (1940s - 1990s)</h1>",
         unsafe_allow_html=True,
     )
+    st.image("assets/logo.png", caption="Pune Architectural Archive", use_container_width=True)
+    st.write("""
+    Welcome to the **Pune Architectural Archive**, an interactive journey through the city's evolving built environment from the 1940s to the 1990s.
+    
+    Over these decades, Pune transformed from a modest educational hub into a burgeoning metropolis. Each era introduced fresh design philosophies, construction materials, and planning principles, mirroring broader social, economic, and cultural shifts.
 
-    st.markdown("<div class='centered-text'>", unsafe_allow_html=True)
-    st.image(
-        "assets/logo.png",
-        caption="Pune Architectural Archive",
-        use_container_width=True,
-    )
-    st.markdown("</div>", unsafe_allow_html=True)
+    **Features of this Archive:**
+    - **Decade-by-Decade Exploration:** Traverse through time and witness changing architectural styles and urban planning milestones.
+    - **Immersive Visual Galleries:** Explore landmark buildings, from public institutions and educational campuses to residential complexes and commercial hubs.
+    - **Interactive 3D Map:** Pinpoint the geographic distribution of Pune's architectural gems using an advanced map visualization tool.
+    """)
+    st.info("Use the sidebar to start exploring different decades or learn more in the 'About' section.")
 
-    st.markdown(
-        """
-        Welcome to the **Pune Architectural Archive**, an interactive journey through the city's evolving built environment from the 1940s to the 1990s.
-        
-        Over these decades, Pune transformed from a modest educational hub into a burgeoning metropolis. Each era introduced fresh design philosophies, construction materials, and planning principles, mirroring broader social, economic, and cultural shifts.
-        """
-    )
-
-    st.markdown(
-        """
-        **Features of this Archive:**
-        - **Decade-by-Decade Exploration:** Traverse through time and witness changing architectural styles and urban planning milestones.
-        - **Immersive Visual Galleries:** Explore landmark buildings, from public institutions and educational campuses to residential complexes and commercial hubs.
-        - **Interactive 3D Map:** Pinpoint the geographic distribution of Pune's architectural gems using an advanced map visualization tool.
-        """
-    )
-
-    st.info(
-        "Use the sidebar to start exploring different decades or learn more in the 'About' section."
-    )
-
-# **About Page**
 elif st.session_state.selected_decade == "About":
     st.title("About This Project")
-    st.markdown(
-        """
-        This digital archive is a tribute to Pune's rich architectural heritage and its dynamic transformation over the mid-20th century. By compiling images, archival research, and expert insights, we hope to provide a valuable educational resource and a source of inspiration.
-        """
-    )
+    st.write("""
+    This digital archive is a tribute to Pune's rich architectural heritage and its dynamic transformation over the mid-20th century. By compiling images, archival research, and expert insights, we hope to provide a valuable educational resource and a source of inspiration.
+    """)
 
-    st.markdown(
-        """
-        **Project Goals:**
-        - Construct a comprehensive digital repository of Pune's historical buildings.
-        - Highlight the interplay between architectural trends, socio-cultural influences, and evolving urban policies.
-        - Offer an interactive, user-friendly platform that encourages exploration and deeper appreciation.
-        
-        **Methodology & Sources:**
-        - In-depth review of municipal archives, architectural journals, and historical documentation.
-        - Contributions from local historians, architects, and urban planners.
-        - Integration of geospatial data for mapping and visualization.
-        
-        **Key Contributor:**
-        - Kaustubh Devang – Research, Content Development, Web Implementation
-        
-        **Contact & Feedback:**
-        We welcome contributions, suggestions, and corrections. Please reach out at:
-        [kaustubhdevang16@gmail.com](mailto:kaustubhdevang16@gmail.com)
-        """
-    )
+    st.write("""
+    **Project Goals:**
+    - Construct a comprehensive digital repository of Pune's historical buildings.
+    - Highlight the interplay between architectural trends, socio-cultural influences, and evolving urban policies.
+    - Offer an interactive, user-friendly platform that encourages exploration and deeper appreciation.
+    """)
 
-# **Decade Pages**
+    st.write("""
+    **Key Contributor:**
+    - Kaustubh Devang – Research, Content Development, Web Implementation
+    
+    **Contact & Feedback:**
+    We welcome contributions, suggestions, and corrections. Please reach out at:
+    [kaustubhdevang16@gmail.com](mailto:kaustubhdevang16@gmail.com)
+    """)
+
 else:
+    # Decade page
     st.markdown(
         f"<h1 class='decade-title'>Pune in the {st.session_state.selected_decade}</h1>",
         unsafe_allow_html=True,
     )
+
     decade_data = data[data["decade"] == st.session_state.selected_decade]
 
-    # **Use Tabs for Organization**
-    tab_overview, tab_gallery, tab_projects, tab_map = st.tabs(
-        ["Overview", "Gallery", "Featured Projects", "Map"]
+    # Radio to mimic tabs
+    current_section = st.radio(
+        "Sections:",
+        sections,
+        index=st.session_state.tab_index,
+        key="section_selector",
+        horizontal=True
     )
 
-    with tab_overview:
+    new_tab_index = sections.index(current_section)
+    if new_tab_index != st.session_state.tab_index:
+        st.session_state.tab_index = new_tab_index
+        st.rerun()
+
+    # Display content based on current_section
+    if current_section == "Overview":
         st.header(f"Overview of the {st.session_state.selected_decade}")
-        overview_text = decade_overviews.get(
-            st.session_state.selected_decade, "Overview information not available."
-        )
-        st.markdown(overview_text)
+        overview_text = decade_overviews.get(st.session_state.selected_decade, "No overview available.")
+        st.write(overview_text)
 
         highlights = decade_highlights.get(st.session_state.selected_decade, [])
         if highlights:
@@ -267,12 +248,9 @@ else:
                 unsafe_allow_html=True,
             )
 
-    with tab_gallery:
+    elif current_section == "Gallery":
         st.header("Visual Gallery")
-        st.write(
-            "Explore a selection of buildings and landmarks that exemplify this decade's architectural style. Hover over images for a subtle effect!"
-        )
-
+        st.write("Explore a selection of buildings and landmarks that exemplify this decade's architectural style.")
         cols = st.columns(3)
         idx_col = 0
         for idx, row in decade_data.iterrows():
@@ -282,17 +260,14 @@ else:
                     st.markdown(f"<div class='gallery-image'>", unsafe_allow_html=True)
                     st.image(image, caption=row["title"], use_container_width=True)
                     st.markdown("</div>", unsafe_allow_html=True)
-
                 idx_col = (idx_col + 1) % 3
             except FileNotFoundError:
                 cols[idx_col].warning(f"Image not found for {row['title']}")
                 idx_col = (idx_col + 1) % 3
 
-    with tab_projects:
+    elif current_section == "Featured Projects":
         st.header("Featured Projects")
-        st.write(
-            "Delve deeper into notable buildings of this decade. Click on a project to learn about its background, architectural significance, and the visionary minds behind it."
-        )
+        st.write("Delve deeper into notable buildings of this decade.")
         for idx, row in decade_data.iterrows():
             with st.expander(row["title"]):
                 col1, col2 = st.columns([1, 2])
@@ -309,23 +284,16 @@ else:
                         st.markdown(f"**Year Built**: {int(row['year_built'])}")
                     if "style" in row and not pd.isnull(row["style"]):
                         st.markdown(f"**Architectural Style**: {row['style']}")
+                    st.write(row["description"] if not pd.isnull(row["description"]) else "No additional details available.")
 
-                    st.markdown(
-                        row["description"]
-                        if not pd.isnull(row["description"])
-                        else "No additional details available."
-                    )
-
-    with tab_map:
+    elif current_section == "Map":
         st.header("Interactive 3D Map")
-        st.write(
-            "Pinpoint the geographical spread of these architectural projects. Zoom, pan, and tilt the map for a detailed spatial understanding."
-        )
+        st.write("Pinpoint the geographical spread of these architectural projects.")
+
         if (
             "location" in decade_data.columns
             and not decade_data["location"].isnull().all()
         ):
-
             def extract_lat_lon(location_str):
                 try:
                     if pd.isnull(location_str):
@@ -335,15 +303,12 @@ else:
                 except Exception:
                     return None, None
 
-            # Apply the function
             decade_data = decade_data.copy()
             decade_data[["lat", "lon"]] = decade_data["location"].apply(
                 lambda x: pd.Series(extract_lat_lon(x))
             )
-
-            # Drop rows with missing lat/lon
             map_data = decade_data.dropna(subset=["lat", "lon"])
-            map_data["height"] = 50  # Example height
+            map_data["height"] = 50
 
             if not map_data.empty:
                 column_layer = pdk.Layer(
@@ -386,38 +351,45 @@ else:
 
                 st.pydeck_chart(deck)
             else:
-                st.info("No valid location data available to display on the map.")
+                st.info("No valid location data available.")
         else:
             st.info("Location data is not available for this decade.")
 
-# **Navigation**
+# Navigation Bar
 st.markdown("---")
-idx = decades.index(st.session_state.selected_decade)
-col1, col2, col3 = st.columns([1, 1, 1])
+col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
 
-# Previous Decade Navigation
+idx = decades.index(st.session_state.selected_decade)
+
+# Previous Decade
 if idx > 1:
     previous_decade = decades[idx - 1]
-    if col1.button(
-        f"← {previous_decade}", key=f"prev_{st.session_state.selected_decade}"
-    ):
+    if col1.button(f"← {previous_decade}"):
         st.session_state.selected_decade = previous_decade
+        st.session_state.tab_index = 0
         st.rerun()
 
-# Home Button
-if col2.button("Home", key=f"home_{st.session_state.selected_decade}"):
+# Home
+if col2.button("Home"):
     st.session_state.selected_decade = "Home"
+    st.session_state.tab_index = 0
     st.rerun()
 
-# Next Decade Navigation
-if idx < len(decades) - 2:
-    next_decade = decades[idx + 1]
-    if col3.button(f"{next_decade} →", key=f"next_{st.session_state.selected_decade}"):
-        st.session_state.selected_decade = next_decade
+# Next Section
+if st.session_state.selected_decade not in ["Home", "About"]:
+    if col3.button("Next Section →"):
+        st.session_state.tab_index = (st.session_state.tab_index + 1) % len(sections)
         st.rerun()
 
+# Next Decade
+if idx < len(decades) - 2:
+    next_decade = decades[idx + 1]
+    if col4.button(f"{next_decade} →"):
+        st.session_state.selected_decade = next_decade
+        st.session_state.tab_index = 0
+        st.rerun()
 
-# **Footer**
+# Footer
 st.sidebar.markdown("---")
 st.sidebar.markdown(
     """
