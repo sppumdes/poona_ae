@@ -85,8 +85,9 @@ def load_data():
     data = pd.read_csv("data/architecture_data.csv")
     return data
 
+
 # Initialize session state for decade selection
-if 'selected_decade' not in st.session_state:
+if "selected_decade" not in st.session_state:
     st.session_state.selected_decade = "Home"
 
 data = load_data()
@@ -126,27 +127,27 @@ decade_highlights = {
     "1940s": [
         "Transitioning from colonial influences to vernacular adaptations",
         "Introduction of reinforced concrete and newer building materials",
-        "Foundational public and educational institutions"
+        "Foundational public and educational institutions",
     ],
     "1950s": [
         "Rising modernist principles influencing cityscapes",
         "Blending traditional aesthetics with new construction techniques",
-        "Emergence of key municipal and residential projects"
+        "Emergence of key municipal and residential projects",
     ],
     "1960s": [
         "Strong focus on functionality and open spaces",
         "Expansion of government complexes and research institutes",
-        "Initial steps towards zoning and planned urban growth"
+        "Initial steps towards zoning and planned urban growth",
     ],
     "1970s": [
         "Growing emphasis on sustainable and climate-responsive designs",
         "Increased use of local materials and eco-friendly practices",
-        "Housing cooperatives and community-centric developments"
+        "Housing cooperatives and community-centric developments",
     ],
     "1980s-1990s": [
         "Eclectic fusion of international and indigenous design philosophies",
         "Introduction of IT parks and corporate architecture",
-        "Postmodern elements and innovative building façades"
+        "Postmodern elements and innovative building façades",
     ],
 }
 
@@ -157,9 +158,9 @@ decades = ["Home", "1940s", "1950s", "1960s", "1970s", "1980s-1990s", "About"]
 st.sidebar.title("Explore Pune's Past")
 st.sidebar.markdown("Navigate through six decades of architectural transformation:")
 decade_selection = st.sidebar.selectbox(
-    "Select a Decade or Section", 
-    decades, 
-    index=decades.index(st.session_state.selected_decade)
+    "Select a Decade or Section",
+    decades,
+    index=decades.index(st.session_state.selected_decade),
 )
 
 # Update session state when selection changes
@@ -168,10 +169,17 @@ if decade_selection != st.session_state.selected_decade:
 
 # **Home Page**
 if st.session_state.selected_decade == "Home":
-    st.markdown("<h1 class='main-title'>Pune's Architectural Evolution (1940s - 1990s)</h1>", unsafe_allow_html=True)
+    st.markdown(
+        "<h1 class='main-title'>Pune's Architectural Evolution (1940s - 1990s)</h1>",
+        unsafe_allow_html=True,
+    )
 
     st.markdown("<div class='centered-text'>", unsafe_allow_html=True)
-    st.image("assets/logo.png", caption="Pune Architectural Archive", use_container_width=True)
+    st.image(
+        "assets/logo.png",
+        caption="Pune Architectural Archive",
+        use_container_width=True,
+    )
     st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown(
@@ -181,7 +189,7 @@ if st.session_state.selected_decade == "Home":
         Over these decades, Pune transformed from a modest educational hub into a burgeoning metropolis. Each era introduced fresh design philosophies, construction materials, and planning principles, mirroring broader social, economic, and cultural shifts.
         """
     )
-    
+
     st.markdown(
         """
         **Features of this Archive:**
@@ -191,7 +199,9 @@ if st.session_state.selected_decade == "Home":
         """
     )
 
-    st.info("Use the sidebar to start exploring different decades or learn more in the 'About' section.")
+    st.info(
+        "Use the sidebar to start exploring different decades or learn more in the 'About' section."
+    )
 
 # **About Page**
 elif st.session_state.selected_decade == "About":
@@ -201,7 +211,7 @@ elif st.session_state.selected_decade == "About":
         This digital archive is a tribute to Pune's rich architectural heritage and its dynamic transformation over the mid-20th century. By compiling images, archival research, and expert insights, we hope to provide a valuable educational resource and a source of inspiration.
         """
     )
-    
+
     st.markdown(
         """
         **Project Goals:**
@@ -225,7 +235,10 @@ elif st.session_state.selected_decade == "About":
 
 # **Decade Pages**
 else:
-    st.markdown(f"<h1 class='decade-title'>Pune in the {st.session_state.selected_decade}</h1>", unsafe_allow_html=True)
+    st.markdown(
+        f"<h1 class='decade-title'>Pune in the {st.session_state.selected_decade}</h1>",
+        unsafe_allow_html=True,
+    )
     decade_data = data[data["decade"] == st.session_state.selected_decade]
 
     # **Use Tabs for Organization**
@@ -239,7 +252,7 @@ else:
             st.session_state.selected_decade, "Overview information not available."
         )
         st.markdown(overview_text)
-        
+
         highlights = decade_highlights.get(st.session_state.selected_decade, [])
         if highlights:
             st.markdown(
@@ -256,8 +269,10 @@ else:
 
     with tab_gallery:
         st.header("Visual Gallery")
-        st.write("Explore a selection of buildings and landmarks that exemplify this decade's architectural style. Hover over images for a subtle effect!")
-        
+        st.write(
+            "Explore a selection of buildings and landmarks that exemplify this decade's architectural style. Hover over images for a subtle effect!"
+        )
+
         cols = st.columns(3)
         idx_col = 0
         for idx, row in decade_data.iterrows():
@@ -267,7 +282,7 @@ else:
                     st.markdown(f"<div class='gallery-image'>", unsafe_allow_html=True)
                     st.image(image, caption=row["title"], use_container_width=True)
                     st.markdown("</div>", unsafe_allow_html=True)
-                
+
                 idx_col = (idx_col + 1) % 3
             except FileNotFoundError:
                 cols[idx_col].warning(f"Image not found for {row['title']}")
@@ -294,7 +309,7 @@ else:
                         st.markdown(f"**Year Built**: {int(row['year_built'])}")
                     if "style" in row and not pd.isnull(row["style"]):
                         st.markdown(f"**Architectural Style**: {row['style']}")
-                    
+
                     st.markdown(
                         row["description"]
                         if not pd.isnull(row["description"])
@@ -303,11 +318,14 @@ else:
 
     with tab_map:
         st.header("Interactive 3D Map")
-        st.write("Pinpoint the geographical spread of these architectural projects. Zoom, pan, and tilt the map for a detailed spatial understanding.")
+        st.write(
+            "Pinpoint the geographical spread of these architectural projects. Zoom, pan, and tilt the map for a detailed spatial understanding."
+        )
         if (
             "location" in decade_data.columns
             and not decade_data["location"].isnull().all()
         ):
+
             def extract_lat_lon(location_str):
                 try:
                     if pd.isnull(location_str):
@@ -363,7 +381,7 @@ else:
                     map_style="mapbox://styles/mapbox/light-v9",
                     initial_view_state=view_state,
                     layers=[column_layer, text_layer],
-                    tooltip={"text": "{title}\nArchitect: {architect}"}
+                    tooltip={"text": "{title}\nArchitect: {architect}"},
                 )
 
                 st.pydeck_chart(deck)
@@ -380,18 +398,24 @@ col1, col2, col3 = st.columns([1, 1, 1])
 # Previous Decade Navigation
 if idx > 1:
     previous_decade = decades[idx - 1]
-    if col1.button(f"← {previous_decade}"):
+    if col1.button(
+        f"← {previous_decade}", key=f"prev_{st.session_state.selected_decade}"
+    ):
         st.session_state.selected_decade = previous_decade
+        st.rerun()
 
 # Home Button
-if col2.button("Home"):
+if col2.button("Home", key=f"home_{st.session_state.selected_decade}"):
     st.session_state.selected_decade = "Home"
+    st.rerun()
 
 # Next Decade Navigation
 if idx < len(decades) - 2:
     next_decade = decades[idx + 1]
-    if col3.button(f"{next_decade} →"):
+    if col3.button(f"{next_decade} →", key=f"next_{st.session_state.selected_decade}"):
         st.session_state.selected_decade = next_decade
+        st.rerun()
+
 
 # **Footer**
 st.sidebar.markdown("---")
@@ -413,5 +437,5 @@ st.markdown(
         </p>
     </div>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
