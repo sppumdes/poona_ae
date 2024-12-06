@@ -82,7 +82,7 @@ pdk.settings.mapbox_api_key = "YOUR_MAPBOX_API_KEY"
 # **Load Data**
 @st.cache_data
 def load_data():
-    data = pd.read_csv("data/architecture_data.csv")
+    data = pd.read_csv("data/architecture_data.csv", encoding="latin1")
     return data
 
 
