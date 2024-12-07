@@ -33,8 +33,8 @@ This application requires a Mapbox API token for map rendering. Obtain a token b
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/yourusername/pune-architectural-evolution.git
-   cd pune-architectural-evolution
+   git clone https://github.com/sppumdes/poona_ae.git
+   cd poona_ae
    ```
    
 2. **Install Dependencies:**
@@ -53,11 +53,11 @@ This application requires a Mapbox API token for map rendering. Obtain a token b
      - `year_built`
      - `style`
      - `description`
-   - Store images (e.g., building photos, logos) in `assets/`.
+   - Store images (e.g., building photos) in `images/`.
 
 4. **Run the Application:**
    ```bash
-   streamlit run app.py
+   streamlit run website.py
    ```
    Access the interface at [http://localhost:8501](http://localhost:8501).
 
@@ -69,15 +69,15 @@ pune-architectural-evolution/
 │  └─ architecture_data.csv
 ├─ assets/
 │  ├─ logo.png
+├─ images/
 │  └─ [other images]
-├─ app.py
 ├─ requirements.txt
 └─ README.md
 ```
 
-- **`app.py`**: Core Streamlit application.
+- **`website.py`**: Core Streamlit application.
 - **`data/architecture_data.csv`**: Source data file including descriptive and geographical attributes.
-- **`assets/`**: Image assets used in the application.
+- **`images/`**: Image assets used in the application.
 - **`requirements.txt`**: Python dependencies.
 
 ## Contributing
