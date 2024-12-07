@@ -170,7 +170,7 @@ if st.session_state.selected_decade == "Home":
         "<h1 class='main-title'>Pune's Architectural Evolution (1940s - 1990s)</h1>",
         unsafe_allow_html=True,
     )
-    st.image("assets/logo.png", caption="Pune Architectural Archive", use_container_width=True)
+   # st.image("assets/logo.png", caption="Pune Architectural Archive")
     st.write("""
     Welcome to the **Pune Architectural Archive**, an interactive journey through the city's evolving built environment from the 1940s to the 1990s.
     
