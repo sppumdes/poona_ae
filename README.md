@@ -23,7 +23,7 @@
 - [Pillow (PIL)](https://pillow.readthedocs.io/)
 - [PyDeck](https://pydeck.gl/)
 
-A complete list of dependencies is provided in the `requirements.txt` file.
+A complete list of dependencies is provided in the `requirements.txt`.
 
 ### Mapbox Access Token
 
